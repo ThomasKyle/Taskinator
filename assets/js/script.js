@@ -1,3 +1,4 @@
+var task = [];
 var taskIdCounter = 0;
 
 var formEl = document.querySelector("#task-form");
@@ -28,7 +29,8 @@ var taskFormHandler = function(event) {
   } else {
     var taskDataObj = {
       name: taskNameInput,
-      type: taskTypeInput
+      type: taskTypeInput,
+      status: "to do"
     };
 
     createTaskEl(taskDataObj);
@@ -51,6 +53,8 @@ var createTaskEl = function(taskDataObj) {
   listItemEl.appendChild(taskActionsEl);
   tasksToDoEl.appendChild(listItemEl);
 
+    taskDataObj.id = taskIdCounter;
+    task.push(taskDataObj)
 
   taskIdCounter++;
 };
@@ -134,6 +138,12 @@ var taskStatusChangeHandler = function(event) {
     tasksInProgressEl.appendChild(taskSelected);
   } else if (statusValue === "completed") {
     tasksCompletedEl.appendChild(taskSelected);
+
+    for (var i = 0; < task.length; i++){
+        if (task[i].id === parseInt(taskId)){
+            task[i].status = statusValue;
+        }
+    }
   }
 };
 
@@ -148,6 +158,11 @@ var editTask = function(taskId) {
   var taskType = taskSelected.querySelector("span.task-type").textContent;
   console.log(taskType);
 
+  for (var i = 0; i < task.length; i++){
+      task[i].name = taskName;
+      task[i].type = taskType;
+  }
+
   document.querySelector("input[name='task-name']").value = taskName;
   document.querySelector("select[name='task-type']").value = taskType;
 
@@ -159,6 +174,16 @@ var deleteTask = function(taskId) {
   console.log(taskId);
   var taskSelected = document.querySelector(".task-item[data-task-id='" + taskId + "']");
   taskSelected.remove();
+
+  var updatedTaskArr = [];
+
+  for (var i = 0; i < task.length; i++){
+      if (task[i].id !== parseInt(taskId)){
+          updatedTaskArr.push(task[i]);
+      }
+  }
+
+  task = updatedTaskArr;
 };
 
 var dropTaskHandler = function(event) {
@@ -186,6 +211,12 @@ var dropTaskHandler = function(event) {
     }
   
     dropZone.appendChild(draggableElement);
+
+    for (var i = 0; i < task.length; i++){
+        if (task [i].id === parseInt(id)){
+            task[i].status = statusSelectEl.vaule.toLowerCase();
+        }
+    }
   };
   
   var dragTaskHandler = function(event) {
