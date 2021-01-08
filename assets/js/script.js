@@ -139,7 +139,7 @@ var taskStatusChangeHandler = function(event) {
   } else if (statusValue === "completed") {
     tasksCompletedEl.appendChild(taskSelected);
 
-    for (var i = 0; < task.length; i++){
+    for (var i = 0; i < task.length; i++){
         if (task[i].id === parseInt(taskId)){
             task[i].status = statusValue;
         }
@@ -241,6 +241,26 @@ var dropTaskHandler = function(event) {
       event.target.closest(".task-list").removeAttribute("style");
     }
   };
+
+  var saveTasks = function() {
+    localStorage.setItem("tasks", JSON.stringify(tasks));
+    console.log("tasks saved");
+  };
+  
+  var loadTasks = function() {
+    var savedTasks = localStorage.getItem("tasks");
+    if (!savedTasks) {
+      return false;
+    }
+    console.log("Saved tasks found!");
+  
+    savedTasks = JSON.parse(savedTasks);
+  
+    for (var i = 0; i < savedTasks.length; i++) {
+      createTaskEl(savedTasks[i]);
+    }
+  };
+  
   
   formEl.addEventListener("submit", taskFormHandler);
   
